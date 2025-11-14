@@ -75,6 +75,8 @@ public class MediaSequencer {
             // Starta timer
             //imageTimerHandler.postDelayed(this::playNextItem, item.durationInSeconds * 1000L);
 
+
+            // Starta timer (Old Way)
             imageTimerHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
