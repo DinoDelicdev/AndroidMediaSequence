@@ -1,10 +1,12 @@
-package com.example.mediapresentation; // Make sure this package name matches yours
-
+package com.example.mediapresentation;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-
+import android.webkit.MimeTypeMap;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -56,7 +58,7 @@ public class MediaDownloader {
             for (MediaItem item : mediaQueue) {
                 if (item.url.startsWith("http")) {
                     File localFile = getLocalFile(item.url);
-                    if (localFile == null) continue; // Safety check
+                    if (localFile == null) continue;
                     requiredFileNames.add(localFile.getName());
 
                     if (!localFile.exists()) {
@@ -85,6 +87,7 @@ public class MediaDownloader {
 
                         downloadExecutor.execute(() -> {
                             Log.d(TAG, "Worker thread STARTING download: " + localFile.getName());
+
                             downloadFile(item.url, localFile);
 
                             if (localFile.exists() && localFile.length() > 0) {
@@ -211,11 +214,64 @@ public class MediaDownloader {
             }
         }
 
-        String fileName = httpUrl.replaceAll("[^a-zA-Z0-9.-]", "_");
-        if (fileName.length() > 100) {
-            fileName = fileName.substring(fileName.length() - 100);
+        String fileName = getHashedFileName(httpUrl);
+
+        if (fileName == null) {
+            fileName = httpUrl.replaceAll("[^a-zA-Z0-9.-]", "_");
+
+            if (fileName.length() > 100) {
+                fileName = fileName.substring(fileName.length() - 100);
+            }
         }
 
+
         return new File(mediaDir, fileName);
+    }
+
+    private String getHashedFileName(String httpUrl) {
+        String extension = getFileExtension(httpUrl);
+        String hash = md5(httpUrl);
+        if (hash == null) {
+            return null;
+        }
+        return hash + extension;
+    }
+
+    private String getFileExtension(String url) {
+        String urlWithoutQuery = url;
+        int queryIndex = url.lastIndexOf('?');
+        if (queryIndex > 0) {
+            urlWithoutQuery = url.substring(0, queryIndex);
+        }
+
+        String extension = MimeTypeMap.getFileExtensionFromUrl(urlWithoutQuery);
+        if (extension != null && !extension.isEmpty()) {
+            return "." + extension;
+        }
+
+
+        int lastDot = urlWithoutQuery.lastIndexOf('.');
+        if (lastDot > 0 && urlWithoutQuery.length() - lastDot <= 5) {
+            return urlWithoutQuery.substring(lastDot);
+        }
+
+        return ".media";
+    }
+
+    private String md5(String s) {
+        try {
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes());
+            byte[] messageDigest = digest.digest();
+            BigInteger no = new BigInteger(1, messageDigest);
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, "MD5 algorithm not found", e);
+            return null;
+        }
     }
 }

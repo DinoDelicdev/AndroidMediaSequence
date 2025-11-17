@@ -2,19 +2,18 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
     tools:context=".MainActivity">
 
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:visibility="gone" />
-
 
     <VideoView
         android:id="@+id/videoView"
@@ -30,6 +29,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:indeterminate="true"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/mockButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Mock"
         android:visibility="gone" />
 
 </FrameLayout>
