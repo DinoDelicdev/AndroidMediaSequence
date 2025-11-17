@@ -40,5 +40,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.glide)
+    implementation(libs.volley)
+    implementation(libs.gson)
     annotationProcessor(libs.compiler)
 }

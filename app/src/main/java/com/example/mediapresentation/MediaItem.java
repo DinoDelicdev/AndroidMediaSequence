@@ -5,6 +5,8 @@ public class MediaItem {
     public String url;
     int durationInSeconds;
 
+    public MediaItem() { }
+
     // Konstruktor za slike
     public MediaItem(String type, String url, int durationInSeconds) {
         this.type = type;

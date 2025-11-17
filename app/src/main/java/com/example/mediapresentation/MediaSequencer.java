@@ -4,10 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.VideoView;
 import com.bumptech.glide.Glide;
+
+import java.io.File;
 import java.util.List;
 
 public class MediaSequencer {
@@ -88,8 +91,10 @@ public class MediaSequencer {
             // Ako Je video
             imageView.setVisibility(View.GONE);
             videoView.setVisibility(View.VISIBLE);
+            Log.d("SEKVENCER", item.url);
+            File videoFile = new File(item.url);
+            Uri videoUri = Uri.fromFile(videoFile);
 
-            Uri videoUri = Uri.parse(item.url);
             videoView.setVideoURI(videoUri);
             // .start() ne treba jer smo gore stavili mediaPlayer.start(); u setOnPreparedListener
         }
