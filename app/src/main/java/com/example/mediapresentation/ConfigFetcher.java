@@ -24,7 +24,7 @@ public class ConfigFetcher {
     private static final String TAG = "ConfigFetcher";
     private static final String CONFIG_FILE_NAME = "media_config.json";
 
-    // 1. Create a callback interface to talk back to MainActivity
+
     public interface ConfigCallback {
         void onConfigFetched(List<MediaItem> mediaList);
         void onConfigFetchFailed(String error);

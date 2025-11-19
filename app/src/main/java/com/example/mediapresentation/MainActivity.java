@@ -47,6 +47,26 @@ public class MainActivity extends AppCompatActivity implements
 
         progressBar.setVisibility(View.VISIBLE);
 
+        mockButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ItemFetcher fetcher = new ItemFetcher(MainActivity.this, new ItemFetcher.ItemCallback() {
+                    @Override
+                    public void onItemReceived(ArticleItem articleItem) {
+                        Log.d(TAG, articleItem.toString());
+                        Toast.makeText(MainActivity.this, articleItem.name + " " + articleItem.price + "KM", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(MainActivity.this, "Check failed!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+                fetcher.fetch();
+            }
+        });
+
         Log.d(TAG, "Starting ConfigFetcher...");
         ConfigFetcher configFetcher = new ConfigFetcher(this, this);
         configFetcher.fetchConfig();
@@ -54,36 +74,25 @@ public class MainActivity extends AppCompatActivity implements
         GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                // "f-ing" "A" "f-ing" "DOUBLE" "f-ing" "TAP" "f-ing" "HAPPENED!"
                 Log.d(TAG, "FUCKING DOUBLE TAP DETECTED!");
-
-                // "f-ing" "Now" "f-ing" "toggle" "f-ing" "the" "f-ing" "button"
                 if (mockButton.getVisibility() == View.VISIBLE) {
-                    // "f-ing" "It's" "f-ing" "visible," "f-ing" "so" "f-ing" "HIDE" "f-ing" "it"
                     mockButton.setVisibility(View.GONE);
                     Log.d(TAG, "Mock button is now FUCKING GONE.");
                 } else {
-                    // "f-ing" "It's" "f-ing" "gone," "f-ing" "so" "f-ing" "SHOW" "f-ing" "it"
                     mockButton.setVisibility(View.VISIBLE);
                     Log.d(TAG, "Mock button is now FUCKING VISIBLE.");
                 }
-                return true; // "f-ing" "Tell" "f-ing" "the" "f-ing" "system" "f-ing" "we" "f-ing" "handled" "f-ing" "this" "f-ing" "shit"
+                return true;
             }
         };
 
-        // "f-ing" "Create" "f-ing" "the" "f-ing" "GestureDetector" "f-ing" "itself" "f-ing" "and" "f-ing" "give" "f-ing" "it" "f-ing" "the" "f-ing" "listener"
-        gestureDetector = new GestureDetector(this, gestureListener);
 
-        // "f-ing" "This" "f-ing" "is" "f-ing" "the" "f-ing" "magic."
-        // "f-ing" "Set" "f-ing" "an" "f-ing" "OnTouchListener" "f-ing" "on" "f-ing" "the" "f-ing" "WHOLE" "f-ing" "SCREEN" (`rootLayout`)
+        gestureDetector = new GestureDetector(this, gestureListener);
         rootLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // "f-ing" "Every" "f-ing" "time" "f-ing" "the" "f-ing" "screen" "f-ing" "is" "f-ing" "touched,"
-                // "f-ing" "we" "f-ing" "PASS" "f-ing" "that" "f-ing" "touch" "f-ing" "event" "f-ing" "to" "f-ing" "our" "f-ing" "GestureDetector."
-                // "f-ing" "The" "f-ing" "detector" "f-ing" "will" "f-ing" "decide" "f-ing" "if" "f-ing" "it's" "f-ing" "a" "f-ing" "double-tap" "f-ing" "or" "f-ing" "not."
                 gestureDetector.onTouchEvent(event);
-                return true; // "f-ing" "Tell" "f-ing" "the" "f-ing" "system" "f-ing" "we" "f-ing" "handled" "f-ing" "the" "f-ing" "touch"
+                return true;
             }
         });
     }
